@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder Structure Viewer</title>
+    <style>
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-left: 20px; cursor: pointer; }
+        .directory { font-weight: bold; }
+        .file { color: grey; }
+        button { margin: 5px; }
+        form { margin-top: 20px; }
+        .progress { width: 100%; height: 20px; background-color: #f0f0f0; }
+        .progress-bar { width: 0%; height: 100%; background-color: #4caf50; }
+    </style>
+</head>
+<body>
+    <h1>Folder Structure Viewer</h1>
+    <div>
+        <button id="homeButton">Home</button>
+        <button id="upButton">Up</button>
+    </div>
+    <div id="folder-structure"></div>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput" required multiple>
+        <button type="submit">Upload</button>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </form>
+
+    <script>
+        let currentPath = '/';
+        const progressBar = document.getElementById('progressBar');
+
+        document.getElementById('homeButton').addEventListener('click', () => {
+            currentPath = '/';
+            fetchFolderStructure();
+        });
+
+        document.getElementById('upButton').addEventListener('click', () => {
+            const pathParts = currentPath.split('/').filter(Boolean);
+            pathParts.pop();
+            currentPath = pathParts.length ? '/' + pathParts.join('/') : '/';
+            fetchFolderStructure();
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            formData.append('targetDir', currentPath);
+
+            const xhr = new XMLHttpRequest();
+
+            // Track upload progress
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    const percentComplete = (event.loaded / event.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                }
+            });
+
+            xhr.open('POST', '/api/upload', true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert(xhr.responseText);
+                    fetchFolderStructure();
+                } else {
+                    console.error('Error uploading file:', xhr.statusText);
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Network error occurred while uploading file.');
+            };
+
+            xhr.send(formData);
+        });
+
+        function createFolderTree(data, container) {
+            const ul = document.createElement('ul');
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = item.name;
+                if (item.type === 'directory') {
+                    li.className = 'directory';
+                    li.addEventListener('click', () => {
+                        currentPath = item.path;
+                        fetchFolderStructure();
+                    });
+                } else {
+                    li.className = 'file';
+                    li.addEventListener('click', () => {
+                        const downloadUrl = `/api/download?path=${encodeURIComponent(item.path)}`;
+                        window.open(downloadUrl, '_blank');
+                    });
+                }
+                ul.appendChild(li);
+            });
+            container.appendChild(ul);
+        }
+
+        function fetchFolderStructure() {
+            fetch(`/api/folder-structure?path=${encodeURIComponent(currentPath)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('folder-structure');
+                    container.innerHTML = '';
+                    createFolderTree(data, container);
+                })
+                .catch(error => {
+                    console.error('Error fetching folder structure:', error);
+                });
+        }
+
+        fetchFolderStructure();
+    </script>
+</body>
+</html>
