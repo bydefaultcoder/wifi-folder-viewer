@@ -1,9 +1,9 @@
 const fs = require('fs');
 
 
-  const rootPath = process.cwd()
-  const drive =  rootPath.split(':')[0]
-  const content = `set "currentDir=%cd%"
+const rootPath = process.cwd()
+const drive =  rootPath.split(':')[0]
+const content = `set "currentDir=%cd%"
 @REM echo %currentDir%
 cd /d ${drive}:
 cd ${rootPath}

@@ -1,0 +1,10 @@
+I Created a tool to transefer files between between two Laptop(or desktop) to mobile or vice versa via Wi-files
+
+to use This tool:
+step1: #setup the files
+   1)clone it `git clone https://github.com/bydefaultcoder/wifi-folder-viewer.git` (it will better if you clone it in desktop)
+   2)setup System Environment variable 
+      `System environment variable > click on new (open imag1) > as imag write "sharefile" in veriable name`
+            `and in the variable value write path of FileShare.bat` 
+            `in my case it is "C:\Users\proje\Desktop\experiment_all\wifi-folder-viewer\FileShare.bat" (open imag2) `
+   3)go to folder "wifi-folder-viewer" run setup.bat
