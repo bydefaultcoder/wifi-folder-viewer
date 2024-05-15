@@ -3,8 +3,17 @@ I Created a tool to transefer files between between two Laptop(or desktop) to mo
 to use This tool:
 step1: #setup the files
    1)clone it `git clone https://github.com/bydefaultcoder/wifi-folder-viewer.git` (it will better if you clone it in desktop)
-   2)setup System Environment variable 
-      `System environment variable > click on new (open imag1) > as imag write "sharefile" in veriable name`
-            `and in the variable value write path of FileShare.bat` 
-            `in my case it is "C:\Users\proje\Desktop\experiment_all\wifi-folder-viewer\FileShare.bat" (open imag2) `
-   3)go to folder "wifi-folder-viewer" run setup.bat
+   2)go to folder "wifi-folder-viewer" run `setup.bat` (img1) (in CMD not PowerShell)
+   3)setup System Environment variable 
+       > System environment variable 
+       > select path (img3)
+       > then click on edit (img4)
+       > click on new (img5)
+       > copy & paste the path of the folder (img2) (in my case it is "C:\Users\proje\Desktop\experiment_all\wifi-folder-viewer" ) (img7)
+
+step2:#how to use it
+    go to folder where to use it (jis jagah ki file tumko mobile m copy karni h)
+    open powershell using shift + RightMouseClick (img8)
+    write `cmd` (img9) then `fileshare` (img10)
+
+now every thing is setup scan the QR using any tool (exmple google lens ) exctract the link open in chrom in mobile

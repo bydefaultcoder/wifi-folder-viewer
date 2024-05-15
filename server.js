@@ -13,23 +13,12 @@ const app = express();
 const port = 3000;
 
 
-// const path = require('path');
 
-// const systemPath = process.env.PATH;
-
-// Setup multer for file uploads
 createFolderIfNotExists('tempuploads')
 createFolderIfNotExists('AllUploadedFiles')
 const upload = multer({ dest: 'tempuploads/' });
 
-// const upload = multer(multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'tempuploads/');
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, file.originalname);
-//     }
-// }))
+
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
