@@ -1,3 +1,3 @@
 @echo off
-node createBatchfile
+node helper/createBatchfile
 npm i

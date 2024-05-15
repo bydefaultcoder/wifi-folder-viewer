@@ -1,5 +1,6 @@
 const args = process.argv[2];
-const {getPrivateIp} = require('./privateIpGetter')
+const {getPrivateIp} = require('./helper/privateIpGetter')
+const {createFolderIfNotExists} = require('./helper/folderCreater')
 const qrcode = require('qrcode-terminal');
 
 const express = require('express');
@@ -17,6 +18,8 @@ const port = 3000;
 // const systemPath = process.env.PATH;
 
 // Setup multer for file uploads
+createFolderIfNotExists('tempuploads')
+createFolderIfNotExists('AllUploadedFiles')
 const upload = multer({ dest: 'tempuploads/' });
 
 // const upload = multer(multer.diskStorage({
