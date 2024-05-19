@@ -10,7 +10,9 @@ const path = require('path');
 const multer = require('multer');
 
 const app = express();
-const port = 3000;
+const DEFAULT_PORT = 3000;
+const INACTIVITY_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
+let inactivityTimer = null;
 
 
 
@@ -53,6 +55,11 @@ const readDirectory = (dirPath) => {
     });
     return result;
 };
+
+app.use((req, res, next) => {
+    resetInactivityTimer();
+    next();
+  });
 
 app.get('/api/folder-structure', (req, res) => {
     // const relativePath = req.query.path? AllUploadedFiles+ args;
@@ -131,7 +138,18 @@ const startServer = async () => {
         qrcode.generate(`http://${privateIpAddress}:${port}`, { small: true }, function (qrcode) {
             console.log(qrcode);
         });
+        resetInactivityTimer();
     });
+  };
+
+const resetInactivityTimer = () => {
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+    }
+    inactivityTimer = setTimeout(() => {
+      console.log('Server has been inactive for 10 minutes. Shutting down...');
+      process.exit(0);
+    }, INACTIVITY_TIMEOUT);
   };
   
 startServer()
