@@ -2,7 +2,7 @@ const args = process.argv[2];
 const {getPrivateIp} = require('./helper/privateIpGetter')
 const {createFolderIfNotExists} = require('./helper/folderCreater')
 const qrcode = require('qrcode-terminal');
-
+const detectPort = require('detect-port');
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -124,12 +124,15 @@ app.post('/api/upload', upload.array('file'), (req, res) => {
 const privateIpAddress = getPrivateIp()
 
 console.log(privateIpAddress);
-app.listen(port, () => {
-    // console.log(`Server is running on http://${privateIpAddress}:${port}`);
-    // Generate and print the QR code in the terminal
-    qrcode.generate(`http://${privateIpAddress}:${port}`, { small: true }, function (qrcode) {
-        console.log(qrcode);
-    });
-});
 
+const startServer = async () => {
+    const port = await detectPort(DEFAULT_PORT);
+    app.listen(port, () => {
+        qrcode.generate(`http://${privateIpAddress}:${port}`, { small: true }, function (qrcode) {
+            console.log(qrcode);
+        });
+    });
+  };
+  
+startServer()
 
